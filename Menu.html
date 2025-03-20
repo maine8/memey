@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Ordering System</title>
+    <link rel="stylesheet" href="Webpage.css">
+</head>
+<body>
+
+    <section class="menu-container">
+        <h1 class="menu-title">Menu</h1>
+        <div class="food-container">
+            <div class="food-item"> 
+                <img src="burger.jpeg">
+                <h3>Burger - ₱85</h3>
+                <button onclick="addToOrder('Burger', 85)">Add to Order</button>
+            </div>
+            <div class="food-item"> 
+                <img src="pizza.jpeg">
+                <h3>Pizza - ₱250</h3>
+                <button onclick="addToOrder('Pizza', 250)">Add to Order</button>
+            </div>
+            <div class="food-item"> 
+                <img src="fries.jpeg">
+                <h3>Fries - ₱70</h3>
+                <button onclick="addToOrder('Fries', 70)">Add to Order</button>
+            </div> 
+            <div class="food-item"> 
+                <img src="cake.jpeg">
+                <h3>Chocolate Cake - ₱90</h3>
+                <button onclick="addToOrder('Chocolate Cake', 90)">Add to Order</button>
+            </div> 
+            <div class="drink-container">
+                <div class="drink-item"> 
+                    <img src="mango.jpg">
+                    <h3>Mango drink - ₱95</h3>
+                    <button onclick="addToOrder('Mango drink', 95)">Add to Order</button>
+                </div>
+                <div class="drink-item"> 
+                    <img src="tea.jpeg">
+                    <h3>Tea - ₱30</h3>
+                    <button onclick="addToOrder('Tea', 30)">Add to Order</button>
+                </div> 
+                <div class="drink-item"> 
+                    <img src="milktea.jpeg">
+                    <h3>Milk tea - ₱69</h3>
+                    <button onclick="addToOrder('Milk tea', 69)">Add to Order</button>
+                </div> 
+                <div class="drink-item"> 
+                    <img src="strawberry.jpeg">
+                    <h3>Strawberry drink - ₱55</h3>
+                    <button onclick="addToOrder('Strawberry drink', 55)">Add to Order</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Centered Order Summary -->
+    
+            <h2 class="order-summary">Order</h2>
+            <ul id="order-list"></ul>  
+            <h3>Total: ₱<span id="total">0</span></h3>
+        </div>
+<!-- Delivery Container -->
+<div class="delivery-container">
+    <h2>Enter Delivery Details</h2>
+    <form onsubmit="event.preventDefault(); checkout();">
+        <label for="name">Name:</label>
+        <input type="text" id="name" placeholder="Enter your name" required>
+
+        <label for="contact">Contact Number:</label>
+        <input type="text" id="contact" placeholder="Enter your number" required>
+
+        <label for="address">Address:</label>
+        <textarea id="address" placeholder="Enter your address" required></textarea>
+
+        <label for="payment-method">Payment Method:</label> 
+        <select id="payment-method">
+            <option value="Cash on Delivery">Cash on Delivery</option>
+            <option value="GCash">GCash</option>
+            <option value="Credit/Debit Card">Credit/Debit Card</option> 
+        </select>
+
+        <button type="submit" class="checkout-btn">Checkout</button>
+    </form>
+
+    <div id="waiting-message" style="display: none; text-align: center; margin-top: 20px;">
+        <h2>Enjoy While Waiting! 🍽️</h2>
+        <p>Your food will arrive in <span id="countdown">15</span> minutes.</p>
+        <p>Relax and get ready to enjoy your meal. 😊</p>
+    </div>
+
+
+        </div>
+    </section>
+
+    <script src="Script.js"></script> 
+
+</body>
+</html>

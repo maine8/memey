@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Matching Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #ffefd5;
+        }
+        h1 {
+            font-size: 24px;
+        }
+        .game-container {
+            width: 430px;
+            margin: auto;
+            background-color: #c79;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .score-board {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: white;
+        }
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(4, 100px);
+            grid-gap: 10px;
+            justify-content: center;
+            padding: 10px;
+            background: #c67;
+            border-radius: 8px;
+        }
+        .card {
+            width: 100px;
+            height: 100px;
+            background-color: pink;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 10px;
+            user-select: none;
+            background-size: cover;
+            background-position: center;
+            background-image: url('card-back.jpg'); /* Default back image */
+        }
+        .matched {
+            background-color: green;
+            pointer-events: none;
+        }
+        a {
+            text-decoration: none;
+            font-family: Monospace;
+            font-size: 20px;
+            display: inline-block;
+            padding: 10px 20px;
+            color: #f57386;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Enjoy While Waiting! 🍽️</h2>
+    <p>Your food will arrive in <span id="countdown">15:00</span> minutes.</p>
+    <p>Relax and get ready to enjoy your meal. 😊</p>
+    <hr>
+    <h1>Memory Matching Game</h1>
+    <p>Click on two cards to find a match!</p>
+
+    <div class="game-container">
+        <p class="score-board" id="score">Score: 0</p>
+        <div class="game-board" id="gameBoard"></div>
+    </div>
+
+    <br>
+    <a href="video.html">Click > Karaoke 🎤</a>
+</div>
+
+<script>
+let images = [
+    "cake.jpeg", "pizza.jpeg", "burger.jpeg", "fries.jpeg",
+    "milktea.jpeg", "tea.jpeg", "tea.jpeg", "milktea.jpeg",
+    "cake.jpeg", "pizza.jpeg", "burger.jpeg", "fries.jpeg",
+    "mango.jpg", "mango.jpg", "strawberry.jpeg", "strawberry.jpeg"
+];
+
+let gameBoard = document.getElementById("gameBoard");
+let scoreDisplay = document.getElementById("score");
+let countdownDisplay = document.getElementById("countdown");
+let selectedCards = [];
+let matchedCards = 0;
+let score = 0;
+let countdownTime = 900; // 15 minutes
+let countdownTimer;
+
+// Shuffle the array
+function shuffleArray(array) {
+    return array.sort(() => Math.random() - 0.5);
+}
+
+// Create the game board
+function createGameBoard() {
+    gameBoard.innerHTML = "";
+    selectedCards = [];
+    matchedCards = 0;
+    score = 0;
+    scoreDisplay.innerText = "Score: 0";
+
+    let shuffledImages = shuffleArray([...images]);
+
+    shuffledImages.forEach((image, index) => {
+        let card = document.createElement("div");
+        card.classList.add("card");
+        card.dataset.image = image;
+        card.dataset.index = index;
+        card.style.backgroundImage = "url('card-back.jpg')"; // Default hidden image
+        card.addEventListener("click", flipCard);
+        gameBoard.appendChild(card);
+    });
+
+    startCountdown(); // Start the countdown timer
+}
+
+// Flip the selected card
+function flipCard() {
+    if (selectedCards.length < 2 && !this.classList.contains("flipped") && !this.classList.contains("matched")) {
+        this.classList.add("flipped");
+        this.style.backgroundImage = `url('${this.dataset.image}')`;
+        selectedCards.push(this);
+
+        if (selectedCards.length === 2) {
+            setTimeout(checkMatch, 100); // Wait 1 second before checking
+        }
+    }
+}
+
+// Check if two selected cards match
+function checkMatch() {
+    if (selectedCards.length < 2) return;
+
+    if (selectedCards[0].dataset.image === selectedCards[1].dataset.image) {
+        // Matched: Keep them flipped and mark as matched
+        selectedCards.forEach(card => {
+            card.classList.add("matched");
+            card.classList.remove("flipped"); // Remove flipped class para di na ma-click
+        });
+        matchedCards += 2;
+        score += 10;
+        scoreDisplay.innerText = "Score: " + score;
+
+        // Check if all cards are matched
+        if (matchedCards === images.length) {
+            clearTimeout(countdownTimer); // Stop countdown
+            setTimeout(() => {
+                alert("Congratulations! Restarting Game...");
+                createGameBoard();
+            }, 500);
+        }
+    } else {
+        // Not a match: Flip them back after a short delay
+        setTimeout(() => {
+            selectedCards.forEach(card => {
+                card.classList.remove("flipped");
+                card.style.backgroundImage = "url('card-back.jpg')";
+            });
+            selectedCards = []; // **Dapat nasa loob ng setTimeout**
+        }, 500);
+        return;
+    }
+
+    selectedCards = []; // Reset selection kapag matched
+}
+
+// Countdown Timer
+function updateCountdown() {
+    let minutes = Math.floor(countdownTime / 60);
+    let seconds = countdownTime % 60;
+    countdownDisplay.innerText = minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+
+    if (countdownTime === 0) {
+        clearInterval(countdownTimer);
+        alert("Time's up! Redirecting to Karaoke 🎤...");
+        window.location.href = "video.html"; // Redirect when countdown reaches 0
+    } else {
+        countdownTime--;
+    }
+}
+
+// Start the countdown timer
+function startCountdown() {
+    countdownTimer = setInterval(updateCountdown, 1000);
+}
+
+// Initialize the game on page load
+createGameBoard();
+</script>
+
+</body>
+</html>

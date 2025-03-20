@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karaoke While Waiting</title>
+    <style>
+        body {
+            background-color: #f8c8dc;
+            text-align: center;
+            font-family: serif;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        h2 {
+            font-weight: bold;
+            font-family: cursive;
+            font-size: 50px;
+            color: #e75480;
+        }
+
+        p {
+            font-size: 18px;
+        }
+
+        #timer {
+            font-weight: bold;
+            color: red;
+        }
+
+        video {
+            width: 90%;
+            max-width: 700px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+            border: 1px solid #de5d83;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>🎤 Enjoy Karaoke While Waiting!</h2>
+        <p>Your food will arrive in <span id="timer">15:00</span> seconds.</p>
+        
+        <video id="karaokeVideo" controls autoplay>
+            <source src="tibok.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+      <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var video = document.getElementById("karaokeVideo");
+
+        // ✅ FORCE AUTOPLAY (UNMUTED)
+        function tryAutoplay() {
+            video.play().catch(() => {
+                console.log("⚠️ Autoplay blocked, retrying...");
+                setTimeout(tryAutoplay, 1600);
+            });
+        }
+        tryAutoplay();
+
+        // ✅ REQUEST NOTIFICATION PERMISSION
+        if ("Notification" in window) {
+            Notification.requestPermission().then(permission => {
+                console.log("🔔 Notification permission:", permission);
+            }).catch(error => {
+                console.error("❌ Notification request failed:", error);
+            });
+        }
+
+        // ✅ COUNTDOWN TIMER (Fixed)
+        var minutes = 0;
+        var seconds = 59; // 🔥 Set to 25s
+
+        var countdown = setInterval(updateTimer, 1800); // 🔥 Run every 1s
+
+        function updateTimer() {
+            var timerDisplay = document.getElementById("timer");
+            var minStr = minutes < 10 ? "0" + minutes : minutes;
+            var secStr = seconds < 10 ? "0" + seconds : seconds;
+            timerDisplay.innerHTML = minStr + ":" + secStr;
+
+            if (minutes === 0 && seconds === 0) {
+                clearInterval(countdown);
+                timerDisplay.innerHTML = "00:00"; 
+                sendNotification("🍔 Your order has arrived!", true);
+                return;
+            }
+
+            seconds--;
+            if (seconds < 0 && minutes > 0) {
+                minutes--;
+                seconds = 59;
+            }
+        }
+
+        // ✅ FUNCTION TO SEND NOTIFICATIONS + REDIRECT
+        function sendNotification(message, redirect = false) {
+            console.log("📢 Attempting to send notification:", message);
+
+            if ("Notification" in window) {
+                if (Notification.permission === "granted") {
+                    console.log("✅ Notification permission granted. Sending...");
+                    let notif = new Notification(message);
+                    notif.onclick = function() {
+                        console.log("📌 Notification clicked!");
+                        if (redirect) {
+                            window.location.href = "thank-you.html"; 
+                        }
+                    };
+                } else {
+                    console.warn("⚠️ Notifications blocked. Using alert fallback.");
+                    alert(message);
+                    if (redirect) {
+                        window.location.href = "thank-you.html"; 
+                    }
+                }
+            } else {
+                console.error("❌ Browser does not support notifications.");
+                alert(message);
+                if (redirect) {
+                    window.location.href = "thank-you.html"; 
+                }
+            }
+        }
+    });
+    </script>
+</body>
+</html>

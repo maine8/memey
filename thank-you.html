@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You!</title>
+    <style>
+        body {
+            background-color: #ffc0cb; /* Light Pink Background */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            height: 100vh; /* Full screen height */
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            flex-direction: column; /* Stack elements vertically */
+        }
+        .message-box {
+         width-max:100px; 
+         height:140px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        h1 {
+            color: #e6005c; 
+            font-size:40px;
+        } 
+        p {  
+          font-size:20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Thank You Message -->
+    <div class="message-box">
+        <h1>Thank You! 🍽️</h1>
+        <p>Enjoy your meal! 😋</p> 
+        
+    </div>
+
+    <script>
+        // Redirect to home after 5 seconds
+        setTimeout(function() {
+            window.location.href = "index.html"; 
+        }, 800); // Change time if needed
+    </script>
+
+</body>
+</html>
